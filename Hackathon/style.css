@@ -1,0 +1,101 @@
+/* MoodTunes CSS */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  transition: background 0.5s;
+}
+#app {
+  max-width: 400px;
+  margin: 40px auto;
+  background: rgba(255,255,255,0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+}
+h1 {
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 0.2em;
+}
+.tagline {
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.5em;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 8px;
+  background: #6a82fb;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #3a5fc8;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 8px;
+  font-size: 1em;
+}
+.or {
+  text-align: center;
+  color: #aaa;
+  margin: 8px 0;
+}
+.weather-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1em;
+}
+.weather-info img {
+  width: 48px;
+  height: 48px;
+}
+.mood-label {
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+}
+#playlist-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
+@media (max-width: 600px) {
+  #app {
+    max-width: 98vw;
+    padding: 16px 4vw;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+}
+/* Mood backgrounds */
+body.mood-happy {
+  background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+}
+body.mood-chill {
+  background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+}
+body.mood-cozy {
+  background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+}
+body.mood-energetic {
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+}
+body.mood-calm {
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+}
