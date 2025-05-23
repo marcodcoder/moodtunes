@@ -8,8 +8,15 @@
 </head>
 <body>
   <div id="app">
+    <!-- Home Page (shown first) -->
+    <section id="home-screen">
+      <div id="logo" style="font-size:100px;cursor:pointer;display:block;text-align:center;margin:40px auto 20px auto;">▶️</div>
+      <h1 style="text-align:center;">Welcome to MoodTunes</h1>
+      <p class="tagline" style="text-align:center;">Tap the play button to get started</p>
+    </section>
+
     <!-- Welcome/Input Screen -->
-    <section id="welcome-screen">
+    <section id="welcome-screen" style="display:none;">
       <h1>MoodTunes</h1>
       <p class="tagline">Music for your mood and weather</p>
       <button id="use-location" type="button">Use My Location</button>
@@ -33,5 +40,17 @@
     </section>
   </div>
   <script src="app.js"></script>
+  <script>
+    // Home logo navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      var logo = document.getElementById('logo');
+      if (logo) {
+        logo.onclick = function() {
+          document.getElementById('home-screen').style.display = 'none';
+          document.getElementById('welcome-screen').style.display = 'block';
+        };
+      }
+    });
+  </script>
 </body>
 </html>

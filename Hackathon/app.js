@@ -20,6 +20,7 @@ const weatherToMood = {
 // --- DOM Elements ---
 const welcomeScreen = document.getElementById('welcome-screen');
 const moodScreen = document.getElementById('mood-screen');
+const homeScreen = document.getElementById('home-screen');
 const useLocationBtn = document.getElementById('use-location');
 const submitCityBtn = document.getElementById('submit-city');
 const cityInput = document.getElementById('city-input');
@@ -112,9 +113,17 @@ function showMoodScreen() {
   moodScreen.style.display = 'block';
 }
 
+function showHomeScreen() {
+  homeScreen.style.display = 'block';
+  welcomeScreen.style.display = 'none';
+  moodScreen.style.display = 'none';
+  document.body.className = '';
+  cityInput.value = '';
+}
+
 function showError(msg) {
   alert(msg);
 }
 
-// On load, show welcome screen
-showWelcomeScreen();
+// On load, show home screen
+showHomeScreen();
