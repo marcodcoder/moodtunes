@@ -4,17 +4,17 @@ const WEATHERAPI_KEY = '8b6a038a5cc3474aa84233023252305'; // <-- Replace with yo
 
 // --- Mood mapping based on weather condition text ---
 const weatherToMood = {
-  Sunny: { mood: 'Happy', class: 'mood-happy', playlist: '37i9dQZF1DXdPec7aLTmlC' },
-  Clear: { mood: 'Happy', class: 'mood-happy', playlist: '37i9dQZF1DXdPec7aLTmlC' },
-  Cloudy: { mood: 'Chill', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
-  Overcast: { mood: 'Chill', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
-  Rain: { mood: 'Calm', class: 'mood-calm', playlist: '37i9dQZF1DXbvABJXBIyiY' },
-  Drizzle: { mood: 'Calm', class: 'mood-calm', playlist: '37i9dQZF1DXbvABJXBIyiY' },
-  Thunder: { mood: 'Energetic', class: 'mood-energetic', playlist: '37i9dQZF1DX1tyCD9QhIWF' },
-  Snow: { mood: 'Cozy', class: 'mood-cozy', playlist: '37i9dQZF1DWUNIrSzKgQbP' },
-  Mist: { mood: 'Chill', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
-  Fog: { mood: 'Chill', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
-  Haze: { mood: 'Chill', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
+  Sunny: { mood: 'Happy', genre: 'Pop', class: 'mood-happy', playlist: '37i9dQZF1DXdPec7aLTmlC' },
+  Clear: { mood: 'Happy', genre: 'Pop', class: 'mood-happy', playlist: '37i9dQZF1DXdPec7aLTmlC' },
+  Cloudy: { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
+  Overcast: { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
+  Rain: { mood: 'Calm', genre: 'Acoustic', class: 'mood-calm', playlist: '37i9dQZF1DXbvABJXBIyiY' },
+  Drizzle: { mood: 'Calm', genre: 'Acoustic', class: 'mood-calm', playlist: '37i9dQZF1DXbvABJXBIyiY' },
+  Thunder: { mood: 'Energetic', genre: 'Rock', class: 'mood-energetic', playlist: '37i9dQZF1DX1tyCD9QhIWF' },
+  Snow: { mood: 'Cozy', genre: 'Jazz', class: 'mood-cozy', playlist: '37i9dQZF1DWUNIrSzKgQbP' },
+  Mist: { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
+  Fog: { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
+  Haze: { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' },
 };
 
 // --- DOM Elements ---
@@ -78,7 +78,7 @@ function handleWeatherData(data) {
   const temp = Math.round(data.current.temp_c);
   const icon = data.current.condition.icon;
   // Find a mapping by checking if the condition text contains a known key
-  let mapping = { mood: 'Chill', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' };
+  let mapping = { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' };
   for (const key in weatherToMood) {
     if (conditionText.toLowerCase().includes(key.toLowerCase())) {
       mapping = weatherToMood[key];
@@ -94,6 +94,18 @@ function handleWeatherData(data) {
   weatherDesc.textContent = conditionText;
   temperature.textContent = `${temp}°C`;
   moodLabel.textContent = mapping.mood;
+
+  // Show genre
+  let genreElem = document.getElementById('genre-label');
+  if (!genreElem) {
+    genreElem = document.createElement('div');
+    genreElem.id = 'genre-label';
+    genreElem.style.textAlign = 'center';
+    genreElem.style.fontWeight = 'bold';
+    genreElem.style.margin = '10px 0';
+    moodLabel.parentNode.parentNode.insertBefore(genreElem, playlistContainer);
+  }
+  genreElem.textContent = `Genre: ${mapping.genre}`;
 
   // Set playlist
   playlistContainer.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${mapping.playlist}" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
