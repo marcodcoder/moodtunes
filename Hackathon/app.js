@@ -24,6 +24,7 @@ const homeScreen = document.getElementById('home-screen');
 const useLocationBtn = document.getElementById('use-location');
 const submitCityBtn = document.getElementById('submit-city');
 const cityInput = document.getElementById('city-input');
+const genreInput = document.getElementById('genre-input');
 const tryAnotherBtn = document.getElementById('try-another');
 const weatherIcon = document.getElementById('weather-icon');
 const weatherDesc = document.getElementById('weather-desc');
@@ -33,9 +34,10 @@ const playlistContainer = document.getElementById('playlist-container');
 
 // --- Event Listeners ---
 useLocationBtn.addEventListener('click', () => {
+  const genre = genreInput.value.trim();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      pos => fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude),
+      pos => fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude, genre),
       err => showError('Location access denied. Please enter a city.')
     );
   } else {
@@ -45,8 +47,9 @@ useLocationBtn.addEventListener('click', () => {
 
 submitCityBtn.addEventListener('click', () => {
   const city = cityInput.value.trim();
+  const genre = genreInput.value.trim();
   if (city) {
-    fetchWeatherByCity(city);
+    fetchWeatherByCity(city, genre);
   }
 });
 
@@ -55,21 +58,21 @@ tryAnotherBtn.addEventListener('click', () => {
 });
 
 // --- Functions ---
-function fetchWeatherByCoords(lat, lon) {
+function fetchWeatherByCoords(lat, lon, genre) {
   fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}`)
     .then(res => res.json())
-    .then(data => handleWeatherData(data))
+    .then(data => handleWeatherData(data, genre))
     .catch(() => showError('Failed to fetch weather.'));
 }
 
-function fetchWeatherByCity(city) {
+function fetchWeatherByCity(city, genre) {
   fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHERAPI_KEY}&q=${encodeURIComponent(city)}`)
     .then(res => res.json())
-    .then(data => handleWeatherData(data))
+    .then(data => handleWeatherData(data, genre))
     .catch(() => showError('Failed to fetch weather.'));
 }
 
-function handleWeatherData(data) {
+function handleWeatherData(data, genre) {
   if (!data.current || !data.current.condition) {
     showError('Could not get weather for this location.');
     return;
@@ -77,13 +80,37 @@ function handleWeatherData(data) {
   const conditionText = data.current.condition.text;
   const temp = Math.round(data.current.temp_c);
   const icon = data.current.condition.icon;
-  // Find a mapping by checking if the condition text contains a known key
   let mapping = { mood: 'Chill', genre: 'Indie', class: 'mood-chill', playlist: '37i9dQZF1DX4WYpdgoIcn6' };
   for (const key in weatherToMood) {
     if (conditionText.toLowerCase().includes(key.toLowerCase())) {
       mapping = weatherToMood[key];
       break;
     }
+  }
+  // If user provided a genre, override mapping.genre and playlist
+  let genreToPlaylist = {
+    pop: '37i9dQZF1DXcBWIGoYBM5M',
+    rock: '37i9dQZF1DWXRqgorJj26U',
+    jazz: '37i9dQZF1DXbITWG1ZJKYt',
+    indie: '37i9dQZF1DX2Nc3B70tvx0',
+    acoustic: '37i9dQZF1DX2sUQwD7tbmL',
+    rap: '37i9dQZF1DX0XUsuxWHRQd',
+    edm: '37i9dQZF1DX4dyzvuaRJ0n',
+    country: '37i9dQZF1DX1lVhptIYRda',
+    classical: '37i9dQZF1DWWEJlAGA9gs0',
+    metal: '37i9dQZF1DX9qNs32fujYe',
+    rnb: '37i9dQZF1DX4SBhb3fqCJd',
+    blues: '37i9dQZF1DXd9rSDyQguIk',
+    reggae: '37i9dQZF1DX7QOv5kjbU68',
+    folk: '37i9dQZF1DXaUDcU6KDCj4',
+    kpop: '37i9dQZF1DX9tPFwDMOaN1',
+    soul: '37i9dQZF1DX4WYpdgoIcn6',
+    // add more as needed
+  };
+  let userGenre = genre ? genre.toLowerCase() : '';
+  if (userGenre && genreToPlaylist[userGenre]) {
+    mapping.genre = genre.charAt(0).toUpperCase() + genre.slice(1);
+    mapping.playlist = genreToPlaylist[userGenre];
   }
 
   // Set mood background
@@ -107,6 +134,10 @@ function handleWeatherData(data) {
   }
   genreElem.textContent = `Genre: ${mapping.genre}`;
 
+  // Show player animation
+  var playerAnim = document.getElementById('player-animation');
+  if (playerAnim) playerAnim.style.display = 'block';
+
   // Set playlist
   playlistContainer.innerHTML = `<iframe src="https://open.spotify.com/embed/playlist/${mapping.playlist}" width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
 
@@ -118,6 +149,9 @@ function showWelcomeScreen() {
   welcomeScreen.style.display = 'block';
   document.body.className = '';
   cityInput.value = '';
+  // Hide player animation
+  var playerAnim = document.getElementById('player-animation');
+  if (playerAnim) playerAnim.style.display = 'none';
 }
 
 function showMoodScreen() {
@@ -131,6 +165,9 @@ function showHomeScreen() {
   moodScreen.style.display = 'none';
   document.body.className = '';
   cityInput.value = '';
+  // Hide player animation
+  var playerAnim = document.getElementById('player-animation');
+  if (playerAnim) playerAnim.style.display = 'none';
 }
 
 function showError(msg) {
